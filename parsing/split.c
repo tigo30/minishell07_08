@@ -6,7 +6,7 @@
 /*   By: tgrunho- <tgrunho-@student.42.fr>>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 23:35:51 by macampos          #+#    #+#             */
-/*   Updated: 2024/08/06 08:05:51 by tgrunho-         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:42:31 by tgrunho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ static int	count_words2(char const *s, char c)
 	j = 0;
 	i = 0;
 	check = 1;
+	if (!s)
+        return (0);
 	while (s[i])
 	{
 		if ((s[i] == '>' || s[i] == '<') && check == 1)

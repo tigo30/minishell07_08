@@ -1,0 +1,10 @@
+echo
+includes
+infile
+Makefile
+minishell
+minishell_tester
+parsing
+readline.supp
+src
+temporary

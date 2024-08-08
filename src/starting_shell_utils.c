@@ -6,7 +6,7 @@
 /*   By: tgrunho- <tgrunho-@student.42.fr>>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 12:53:21 by macampos          #+#    #+#             */
-/*   Updated: 2024/08/07 20:57:22 by tgrunho-         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:48:05 by tgrunho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,20 @@ void	free_paths(char **paths, char **cmd)
 	free(paths);
 }
 
+
 char	*get_paths(char *argv, char **envp)
 {
 	int		i;
 	char	**paths;
+	char	*part_path;
 	char	*path;
 	char	**cmd;
 
 	if (!envp)
 		return (NULL);
 	cmd = ft_split(argv, ' ');
+	if (!cmd)
+        return NULL;
 	i = 0;
 	while (ft_strnstr(envp[i], "PATH=", 5) == 0)
 		i++;
@@ -49,8 +53,9 @@ char	*get_paths(char *argv, char **envp)
 	i = -1;
 	while (paths[++i])
 	{
-		path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(path, cmd[0]);
+		part_path = ft_strjoin(paths[i], "/");
+		path = ft_strjoin(part_path, cmd[0]);
+		free(part_path);
 		if (access(path, X_OK) == 0)
 		{
 			free_paths(paths, cmd);
@@ -61,6 +66,37 @@ char	*get_paths(char *argv, char **envp)
 	free_paths(paths, cmd);
 	return (NULL);
 }
+
+
+// char	*get_paths(char *argv, char **envp)
+// {
+// 	int		i;
+// 	char	**paths;
+// 	char	*path;
+// 	char	**cmd;
+
+// 	if (!envp)
+// 		return (NULL);
+// 	cmd = ft_split(argv, ' ');
+// 	i = 0;
+// 	while (ft_strnstr(envp[i], "PATH=", 5) == 0)
+// 		i++;
+// 	paths = ft_split(envp[i] + 5, ':');
+// 	i = -1;
+// 	while (paths[++i])
+// 	{
+// 		path = ft_strjoin(paths[i], "/");
+// 		path = ft_strjoin(path, cmd[0]);
+// 		if (access(path, X_OK) == 0)
+// 		{
+// 			free_paths(paths, cmd);
+// 			return (path);
+// 		}
+// 		free(path);
+// 	}
+// 	free_paths(paths, cmd);
+// 	return (NULL);
+// }
 
 void	closepipes(t_cmd *cmd)
 {

@@ -6,7 +6,7 @@
 /*   By: tgrunho- <tgrunho-@student.42.fr>>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 15:38:19 by macampos          #+#    #+#             */
-/*   Updated: 2024/08/07 20:59:22 by tgrunho-         ###   ########.fr       */
+/*   Updated: 2024/08/08 13:34:25 by tgrunho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,26 +64,31 @@ int	check_input(char *input)
 	return (0);
 }
 
-void	cleanup(t_main *main, t_cmd *cmd)
-{
-	free_env_and_export(main);
-	free(main);
-	if (cmd)
-		free_cmd_args(cmd);
-}
 
-int	process_input_loop(t_main *main, t_cmd *cmd)
+
+int	main(int argc, char **argv, char **envp)
 {
+	t_cmd	*cmd;
+	t_main	*main;
 	t_main	*next;
 	char	*user_input;
 
+	if (argc != 1)
+		return (1);
+	main = NULL;
+	cmd = NULL;
+	(void)argv;
+	main = set_main(main, envp);
 	while (1)
 	{
 		signal_main();
 		user_input = readline("minishell> ");
 		if (!user_input)
 		{
-			cleanup(main, cmd);
+			free_env_and_export(main);
+			free(main);
+			if (cmd)
+				free_cmd_args(cmd);
 			return (1);
 		}
 		if (*user_input != '\0' && check_input(user_input) == 0)
@@ -97,17 +102,6 @@ int	process_input_loop(t_main *main, t_cmd *cmd)
 			main = next;
 		}
 	}
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	t_cmd	*cmd;
-	t_main	*main;
-
-	if (argc != 1)
-		return (1);
-	main = set_main(NULL, envp);
-	cmd = NULL;
-	(void)argv;
-	return (process_input_loop(main, cmd));
+	//clear_history();
+	//free(user_input);
 }

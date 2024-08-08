@@ -3,26 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macampos <macampos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tgrunho- <tgrunho-@student.42.fr>>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 19:19:40 by macampos          #+#    #+#             */
-/*   Updated: 2024/06/14 14:10:41 by macampos         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:06:08 by tgrunho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char	*word_aloc(char const *str, char c)
+static	char *word_aloc(char const *str, char c)
 {
 	char	*word;
 	int		word_len;
 	int		ctd;
 
-	ctd = 0;
 	word_len = 0;
+	ctd = 0;
+	if (!str)
+		return NULL;
 	while (str[word_len] && str[word_len] != c)
 		word_len++;
 	word = (char *)malloc(word_len + 1);
+	if (!word)
+		return NULL;
 	while (ctd < word_len)
 	{
 		word[ctd] = str[ctd];
@@ -34,16 +38,18 @@ static char	*word_aloc(char const *str, char c)
 
 static int	count_words(char const *s, char c)
 {
-	size_t	i;
-	size_t	j;
-	int		check;
+	size_t i;
+	size_t j;
+	int check;
 
-	j = 0;
 	i = 0;
+	j = 0;
 	check = 1;
+	if (!s)
+		return 0;
 	while (s[i])
 	{
-		if (s[i] != c && check == 1)
+		if (s[i] != c && check == 1) 
 		{
 			j++;
 			check = 0;
@@ -55,6 +61,7 @@ static int	count_words(char const *s, char c)
 	return (j);
 }
 
+
 char	**ft_split(char const *s, char c)
 {
 	int		i;
@@ -63,9 +70,11 @@ char	**ft_split(char const *s, char c)
 
 	i = 0;
 	j = 0;
+	if (!s)
+		return NULL;
 	ptr = malloc((count_words(s, c) + 1) * sizeof(char *));
 	if (!ptr)
-		return (NULL);
+		return NULL;
 	while (s[i])
 	{
 		while (s[i] == c)
@@ -73,6 +82,13 @@ char	**ft_split(char const *s, char c)
 		if (s[i] != '\0' && s[i] != c)
 		{
 			ptr[j] = word_aloc(s + i, c);
+			if (!ptr[j])
+			{
+				while (j > 0)
+					free(ptr[--j]);
+				free(ptr);
+				return NULL;
+			}
 			j++;
 		}
 		while (s[i] && s[i] != c)
